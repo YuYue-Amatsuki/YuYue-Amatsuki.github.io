@@ -103,7 +103,7 @@ footer {
 /* 手机端样式 */
 @media (max-width: 767px) {
   body {
-    background: url("https://moe.jitsu.top/img/?sort=mp") no-repeat center center fixed;
+    background: url("https://t.mwm.moe/fj") no-repeat center center fixed;
     background-size: cover;
   }
 
@@ -127,7 +127,7 @@ footer {
 /* PC端样式 */
 @media (min-width: 768px) {
   body {
-    background: url("https://moe.jitsu.top/img/?sort=pc") no-repeat center center fixed;
+    background: url("https://t.mwm.moe/fj") no-repeat center center fixed;
     background-size: cover;
   }
 
