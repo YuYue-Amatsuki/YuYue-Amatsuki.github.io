@@ -41,12 +41,7 @@
 
     <button onclick="loadImage()">获取图片</button>
 
-    <div id="imageContainer"></div>
-
-    <div class="backgroundButtons">
-      <button onclick="downloadBackground()">下载当前背景图片</button>
-      <button onclick="viewBackground()">查看当前背景图片</button>
-    </div>
+    <div id="imageContainer">
   </div>
 
   <script>
@@ -113,19 +108,6 @@
         .catch((error) => {
           console.log("Error:", error);
         });
-    }
-
-    function downloadBackground() {
-      const url = document.body.style.backgroundImage.slice(5, -2);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "background.jpg";
-      link.click();
-    }
-
-    function viewBackground() {
-      const url = document.body.style.backgroundImage.slice(5, -2);
-      window.open(url);
     }
   </script>
   <footer>
