@@ -1,58 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API调用示例</title>
-  <style>
-    #imageContainer {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .imageCard {
-      width: 400px;
-      margin: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-  </style>
+  <title>随机涩图！ By 雨月丶Amatsuki</title>
+<link rel="stylesheet" type="text/css" href="pixiv.css">
 </head>
 <body>
-  <h1>API调用示例</h1>
+  <div class="container">
+    <h1>随机涩图</h1>
 
-  <label for="num">图片数量：</label>
-  <input type="number" id="num" min="1" max="30" value="1"><br>
+    <label for="num">图片数量：</label>
+    <input type="number" id="num" min="1" max="30" value="1"><br>
 
-  <label for="age">年龄分级：</label>
-  <select id="age">
-    <option value="0" selected>全年龄</option>
-    <option value="1">18+</option>
-    <option value="2">随机二选一</option>
-  </select><br>
+    <label for="age">年龄分级：</label>
+    <select id="age">
+      <option value="0" selected>全年龄</option>
+      <option value="1">18+</option>
+      <option value="2">随机二选一</option>
+    </select><br>
 
-  <label for="size">图片尺寸：</label>
-  <select id="size">
-    <option value="original" selected>原图</option>
-    <option value="regular">作品详情页的略缩图</option>
-    <option value="small">p站首页的略缩图</option>
-  </select><br>
+    <label for="size">图片尺寸：</label>
+    <select id="size">
+      <option value="original" selected>原图</option>
+      <option value="regular">作品详情页的略缩图</option>
+      <option value="small">p站首页的略缩图</option>
+    </select><br>
 
-  <label for="keyword">关键词（多关键词用"|"分隔）：</label>
-  <input type="text" id="keyword"><br>
+    <label for="keyword">关键词（多关键词用"|"分隔）：</label>
+    <input type="text" id="keyword"><br>
 
-  <label for="proxy">反代地址（强制使用https）：</label>
-  <input type="text" id="proxy"><br>
-  <p>常见的有i.pixiv.re，i.pixiv.cat（国内已失效），i-cf.pximg.net（p站官方）
-这里墙裂推荐有能力的人自建反代，教程在https://pixiv.cat/reverseproxy.html（可能需要科学上网）<p>
+    <label for="proxy">反代地址（强制使用https）：</label>
+    <input type="text" id="proxy"><br>
+    <p>常见的有i.pixiv.re，i.pixiv.cat（国内已失效），i-cf.pximg.net（p站官方）
+    这里墙裂推荐有能力的人自建反代，教程在https://pixiv.cat/reverseproxy.html（可能需要科学上网）<p>
 
-  <label for="db">图库：</label>
-  <select id="db">
-    <option value="0" selected>新的图库</option>
-    <option value="1">旧的图库</option>
-  </select><br>
+    <label for="db">图库：</label>
+    <select id="db">
+      <option value="0" selected>新的图库</option>
+      <option value="1">旧的图库</option>
+    </select><br>
 
-  <button onclick="loadImage()">获取图片</button>
+    <button onclick="loadImage()">获取图片</button>
 
-  <div id="imageContainer"></div>
+    <div id="imageContainer"></div>
+
+    <div class="backgroundButtons">
+      <button onclick="downloadBackground()">下载当前背景图片</button>
+      <button onclick="viewBackground()">查看当前背景图片</button>
+    </div>
+  </div>
 
   <script>
     function loadImage() {
@@ -107,7 +102,7 @@
             imageCard.appendChild(urlElement);
 
             const tagsElement = document.createElement("p");
-            tagsElement.textContent = "标签: " + image.tags.join(", ");
+            tagsElement.textContent = "TAG: " + image.tags.join(", ");
             imageCard.appendChild(tagsElement);
 
             const userElement = document.createElement("p");
@@ -119,10 +114,23 @@
           console.log("Error:", error);
         });
     }
+
+    function downloadBackground() {
+      const url = document.body.style.backgroundImage.slice(5, -2);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "background.jpg";
+      link.click();
+    }
+
+    function viewBackground() {
+      const url = document.body.style.backgroundImage.slice(5, -2);
+      window.open(url);
+    }
   </script>
-<footer>
-  <p>API 文档：<a href="https://docs.anosu.top/">Jitsuの随机涩图API</a></p>
-  <p>版权所有 © 2023 Jitsuの随机涩图API</p>
-</footer>
+  <footer>
+    <p>API 文档：<a href="https://docs.anosu.top/">Jitsuの随机涩图API</a></p>
+    <p>版权所有 © 2023 Jitsuの随机涩图API</p>
+  </footer>
 </body>
 </html>
