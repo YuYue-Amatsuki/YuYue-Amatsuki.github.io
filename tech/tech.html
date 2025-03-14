@@ -184,7 +184,6 @@
         <!-- 用户操作 -->
         <div class="section">
             <input type="text" id="userid" placeholder="Input userId">
-            
             <div class="actions">
                 <button onclick="sendTicket()">区域前进功能票 6 倍票</button>
                 <button onclick="mapStock()">区域前进保存 99 千米</button>
@@ -267,9 +266,10 @@
             <p>当显示"Your QrCode is invald."或"Unable to operate. Please refresh QrCode."，请重新获取二维码。</p>
             <p>如果操作失败，会提示"Unable to operate. Probably User has logged in."（无法完成操作，账号可能在登入状态中），账号将保持登录状态，则需要等待15分钟后才可操作。（又或是你现在在上机游玩中，无法完成该操作，请下机后再试。）</p>
             <p>成功完成操作后，会上传一条「PANDORA PARADOXXX」<font color="#b964f8">Re:Master</font> 谱面的游玩记录，但是不会覆盖原有成绩。</p>
-            <p>如果修改乐曲分数时显示"<span style="color:hsl(123, 40%, 45%);">200 OK</span>"和"<span style="color:hsl(123, 40%, 45%);">Succeed.</span>"，但公众号没有显示游玩记录时，请修改DX分数后重试。</p>
+            <p>修改乐曲分数时，如果显示"<span style="color:hsl(123, 40%, 45%);">200 OK</span>"和"<span style="color:hsl(123, 40%, 45%);">Succeed.</span>"，但公众号没有显示游玩记录时，请修改DX分数后重新提交数据。</p>
             <p>如果修改乐曲分数时遇到公众号内的游玩记录不显示连击状态和SYNC状态时，这是正常情况。实际上连击状态和SYNC状态会在公众号内的游戏成绩内正常显示，无需担心。</p>
             <p>二维码字符转换为userId后，建议妥善保管好自己的userId，下次进行账号操作时只需刷新二维码再填入userId即可进行账号操作，无需重复输入二维码字符进行多次转换userId。</p>
+            <p><strong><span style="color:red;">请不要向他人泄露自己的userId！</span></strong></p>
         </div>
 
         <div class="section">
@@ -281,7 +281,7 @@
 
         <div class="section">
             <p style="text-align:center">Powered by <a href="https://git.fragrance.moe/Fragrance/maquitous.git">Project Fragrance/Maquitous</a></p>
-            <p style="text-align:center">Presented by Fragrance & Schwarzschild.</p>
+            <p style="text-align:center">Presented by Fragrance & Schwarzschild</p>
         </div>
     </div>
     <script>
