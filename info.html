@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>𝙿𝚛𝚘𝚓𝚎𝚌𝚝 𝙵𝚛𝚊𝚐𝚛𝚊𝚗𝚌𝚎 - 谱面信息查看</title>
+  <link rel="icon" href="logos/logo.png" type="image/x-icon">
+  <style>
+    @font-face {
+        font-family: 'FZLanTYK_Zhun';
+        src: url('fonts/FZLanTYK_Zhun.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    } 
+
+    @font-face {
+        font-family: 'FZLanTYK_Cu';
+        src: url('fonts/FZLanTYK_Cu.woff2') format('woff2');
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+    } 
+
+    @font-face {
+        font-family: 'MARUGOTHICDB';
+        src: url('fonts/SEGA_MARUGOTHICDB.woff2') format('woff2');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    body {
+        font-family: 'FZLanTYK_Cu', 'FZLanTYK_Zhun';
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: url("img/prism-plus@2x.jpg") no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    .container {
+        background-color: #f5f5f542;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .search-box {
+        display: flex;
+        flex-direction: column; /* 改为垂直布局 */
+        gap: 10px; /* 增加间距 */
+        margin-bottom: 20px;
+    }
+
+    input[type="text"], button {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #dddddd00;
+        border-radius: 4px;
+        box-sizing: border-box;
+        width: 100%;
+        background-color: #ffffff7e;
+        font-family: 'MARUGOTHICDB', 'FZLanTYK_Zhun', 'FZLanTYK_Cu';
+    }
+
+    .search-box input[type="text"] {
+        height: 40px; /* 增加高度 */
+        font-size: 16px; /* 增加字体大小 */
+        padding: 0 10px; /* 增加左右内边距 */
+    }
+
+    .search-box button {
+        height: 40px; /* 增加高度 */
+        font-size: 16px; /* 增加字体大小 */
+        padding: 0 10px; /* 增加左右内边距 */
+    }
+
+    button {
+        background-color: #ff699d;
+        border: 3px solid white;
+        color: white;
+        cursor: pointer;
+        font-family: 'FZLanTYK_Cu', 'FZLanTYK_Zhun';
+    }
+
+    button:hover {
+        background-color: #e6457d;
+    }
+
+    .search-results,
+    .song-details {
+        background-color: #f5f5f542;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        font-family: 'MARUGOTHICDB', 'FZLanTYK_Zhun', 'FZLanTYK_Cu';
+    }
+
+    .song-details {
+        display: none;
+    }
+
+    .result-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+
+    .cover-sm {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .search-result-info {
+        flex: 1;
+    }
+
+    .search-result-info div {
+        margin: 3px 0;
+    }
+
+    .song-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .cover-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .song-info {
+        flex: 1;
+        text-align: left;
+    }
+
+    .song-info h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.5em;
+    }
+
+    .song-info p {
+        margin: 8px 0;
+        line-height: 1.5;
+    }
+
+    .difficulties-container {
+        width: 100%;
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+
+    .difficulty-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .difficulty-info {
+        margin-bottom: 15px;
+        line-height: 1.6;
+        color: white
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: white;
+        border: 1px solid #dee2e6;
+        table-layout: fixed; /* 确保表格宽度分配均匀 */
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        word-break: break-word; /* 防止文本溢出 */
+    }
+
+    td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        word-break: break-word; /* 防止文本溢出 */
+    }
+
+    .loading {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+
+    .back-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #ff699d;
+        border: 3px solid white;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 15px;
+    }
+
+    .back-button:hover {
+        background-color: #e6457d;
+    }
+
+    .audio-preview {
+        margin: 15px 0;
+        text-align: center;
+    }
+
+    .audio-preview audio {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 8px;
+        font-family: 'MARUGOTHICDB', 'FZLanTYK_Zhun', 'FZLanTYK_Cu';
+    }
+
+    /* 难度背景色 */
+    .difficulty-section.basic {
+        background: rgba(34, 187, 91, 0.95);
+        border: 2px solid rgba(14, 117, 54, 0.95);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .difficulty-section.advanced {
+        background: rgba(251, 156, 45, 0.95);
+        border: 2px solid rgba(213, 117, 12, 0.95);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .difficulty-section.expert {
+        background: rgba(246, 72, 97, 0.95);
+        border: 2px solid rgba(188, 38, 52, 0.95);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .difficulty-section.master {
+        background: rgba(158, 69, 226, 0.95);
+        border: 2px solid rgba(111, 24, 173, 0.95);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .difficulty-section.remaster {
+        background: rgba(186, 103, 248, 0.95);
+        border: 2px solid rgba(192, 69, 227, 0.95);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* 调整表格样式以适应深色背景 */
+    .difficulty-section.basic table,
+    .difficulty-section.advanced table,
+    .difficulty-section.expert table,
+    .difficulty-section.master table,
+    .difficulty-section.remaster table {
+        background: rgba(255, 255, 255, 0.5);
+        color: #333;
+    }
+
+    .footer-img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 响应式布局 */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        .container {
+            padding: 15px;
+        }
+
+        .song-header {
+            flex-direction: column; /* 改为垂直布局 */
+            align-items: center; /* 居中对齐 */
+        }
+
+        .cover-img {
+            width: 150px; /* 缩小封面图片 */
+            height: 150px;
+        }
+
+        .song-info {
+            text-align: center; /* 居中对齐文字 */
+        }
+
+        .difficulty-section {
+            padding: 15px; /* 缩小内边距 */
+        }
+
+        table {
+            font-size: 10px; /* 缩小表格字体 */
+            display: table; /* 恢复表格布局 */
+            width: 100%; /* 确保宽度100% */
+        }
+
+        th, td {
+            padding: 6px; /* 缩小单元格内边距 */
+        }
+
+        .audio-preview audio {
+            width: 100%; /* 音频播放器宽度适配 */
+        }
+
+        .back-button {
+            width: 100%; /* 按钮宽度适配 */
+            text-align: center;
+        }
+
+        .footer-img {
+            width: 100%; /* 底部图片宽度适配 */
+            height: auto;
+        }
+
+        .difficulties-container {
+            overflow-x: auto;
+        }
+
+        /* 修复表格右侧空白问题 */
+        .difficulty-section table {
+            min-width: unset; /* 移除最小宽度 */
+            width: 100%; /* 确保宽度100% */
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logos/logo3.png" alt="Logo" class="logo" width="100" height="100">
+    <h2>谱面信息查看</h2>
+    <div class="search-box">
+      <input type="text" id="keyword" placeholder="请输入曲目关键词或别名">
+      <button onclick="handleSearch()">搜索</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="song-details" id="songDetails"></div>
+    <p style="text-align:center">Presented by YuYue-Amatsuki</p>
+  </div>
+
+  <script>
+    let beatmapData = {};
+    let musicDetails = [];
+
+    function padId(id) {
+      return String(id).padStart(5, '0');
+    }
+
+    (async function init() {
+      try {
+        showLoading("正在加载曲目数据...");
+        const response = await fetch('https://api.milkbot.cn/server/api/getdata');
+        const rawData = await response.json();
+        beatmapData = Object.fromEntries(
+            Object.entries(rawData).map(([k, v]) => [String(k), v])
+        );
+
+        const detailResponse = await fetch('https://www.diving-fish.com/api/maimaidxprober/music_data');
+        musicDetails = await detailResponse.json();
+
+        hideLoading(); // 加载完成后隐藏容器
+      } catch (error) {
+        showError("曲目数据加载失败，请刷新页面重试");
+      }
+    })();
+
+    function showLoading(text) {
+        const searchResults = document.getElementById('searchResults');
+        const songDetails = document.getElementById('songDetails');
+        
+        // 显示搜索结果容器和加载提示框
+        searchResults.style.display = 'block';
+        songDetails.style.display = 'none';
+        searchResults.innerHTML = `<div class="loading">${text}</div>`;
+    }
+
+    function showError(msg) {
+        const searchResults = document.getElementById('searchResults');
+        const songDetails = document.getElementById('songDetails');
+        
+        // 确保搜索结果容器可见
+        searchResults.style.display = 'block';
+        songDetails.style.display = 'none';
+        
+        // 显示错误信息
+        searchResults.innerHTML = `
+            <div class="result-item" style="color: #dc3545;">${msg}</div>
+        `;
+    }
+
+    function hideLoading() {
+        const searchResults = document.getElementById('searchResults');
+        const loadingElement = document.querySelector('.loading');
+        
+        // 移除加载提示框
+        if (loadingElement) {
+            loadingElement.remove();
+        }
+        
+        // 初始加载完成时隐藏搜索结果容器
+        if (!document.getElementById('keyword').value.trim()) {
+            searchResults.style.display = 'none';
+        }
+    }
+
+    async function handleSearch() {
+      const keyword = document.getElementById('keyword').value.trim();
+      if (!keyword) return alert("请输入搜索关键词");
+
+      try {
+        showLoading("搜索中...");
+        fetch('https://api.milkbot.cn/server/api/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ search: keyword })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('搜索返回数据:', data);
+
+            if (!data || data.returnCode !== 1) {
+                return renderResults([]);
+            }
+
+            const results = (data.ID || []).map(id => ({
+                id: String(id),
+                name: beatmapData[String(id)] || "未知曲目"
+            }));
+
+            renderResults(results);
+        })
+        .catch(error => {
+            console.error('搜索错误:', error);
+            showError("搜索失败，请检查网络连接");
+        })
+        .finally(() => {
+            hideLoading();
+        });
+      } catch (error) {
+        showError("搜索失败，请检查网络连接");
+        hideLoading();
+      }
+    }
+
+    function renderResults(results) {
+      const searchResults = document.getElementById('searchResults');
+      const songDetails = document.getElementById('songDetails');
+      
+      searchResults.style.display = 'block';
+      songDetails.style.display = 'none';
+      
+      if (!results || !results.length) {
+          searchResults.innerHTML = '<div class="result-item">未找到相关谱面</div>';
+          return;
+      }
+
+      const resultHTML = results.map(item => {
+          const paddedId = padId(item.id);
+          const coverUrl = `https://www.diving-fish.com/covers/${paddedId}.png`;
+          return `
+              <div class="result-item" onclick="handleSelect('${item.name.replace(/'/g, "\\'")}', '${item.id}')">
+                  <img src="${coverUrl}" class="cover-sm" onerror="this.style.display='none'">
+                  <div class="search-result-info">
+                      <div>[ID: ${item.id}]</div>
+                      <div><strong>${item.name}</strong></div>
+                  </div>
+              </div>
+          `;
+      }).join('');
+
+      searchResults.innerHTML = resultHTML;
+    }
+
+    function handleSelect(songName, songId) {
+      const searchResults = document.getElementById('searchResults');
+      const songDetails = document.getElementById('songDetails');
+      const paddedId = padId(songId);
+      const coverUrl = `https://www.diving-fish.com/covers/${paddedId}.png`;
+      const matched = musicDetails.filter(m => m.title === songName);
+
+      // 隐藏搜索结果，显示详情
+      searchResults.style.display = 'none';
+      songDetails.style.display = 'block';
+
+      let content = `
+        <button class="back-button" onclick="showSearchResults()">返回搜索结果</button>
+        <div class="song-header">
+          <img src="${coverUrl}" class="cover-img" onerror="this.style.display='none'">
+          <div class="song-info">
+            <h3>${songName}</h3>
+            <p><strong>ID:</strong> ${songId}</p>
+      `;
+
+      if (matched.length === 0) {
+        content += `<p>未找到详细信息</p></div></div>`;
+        songDetails.innerHTML = content;
+        return;
+      }
+
+      const song = matched[0];
+      
+      // 处理音频预览的 ID
+      let audioId = parseInt(songId);
+      if (audioId > 10000 && !songId.startsWith('10')) {
+          // 如果 ID 大于 10000 且不是宴会场曲目，去除第一位数字
+          audioId = parseInt(songId.substring(1));
+      }
+      const audioUrl = `https://assets2.lxns.net/maimai/music/${audioId}.mp3`;
+      
+      content += `
+                <p><strong>曲师:</strong> ${song.basic_info.artist}</p>
+                <p><strong>流派:</strong> ${song.basic_info.genre}</p>
+                <p><strong>BPM:</strong> ${song.basic_info.bpm}</p>
+                <p><strong>版本:</strong> ${song.basic_info.from}</p>
+            </div>
+        </div>
+        <div class="audio-preview">
+            <audio controls preload="none">
+                <source src="${audioUrl}" type="audio/mpeg">
+                您的浏览器不支持音频播放
+            </audio>
+        </div>
+        <div class="difficulties-container">
+    `;
+
+    // 调整后，将难度详情按倒序显示
+    const difficulties = song.level
+        .map((lvl, i) => {
+            const chart = song.charts[i];
+            const notes = chart?.notes || [];
+            const noteLabels = song.type === 'DX'
+                ? ['Tap', 'Hold', 'Slide', 'Touch', 'Break']
+                : ['Tap', 'Hold', 'Slide', 'Break'];
+
+            const difficultyNames = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'Re:MASTER'];
+            const difficultyName = difficultyNames[i] || '未知难度';
+            
+            // 添加难度对应的 CSS 类名
+            const difficultyClass = difficultyName.toLowerCase().replace(':', '');
+
+            const fullNotes = [...notes];
+            while (fullNotes.length < noteLabels.length) fullNotes.push(0);
+            const total = fullNotes.reduce((sum, n) => sum + (n || 0), 0);
+
+            const headers = noteLabels.map(label => `<th>${label}</th>`).join('') + `<th>Total</th>`;
+            const values = fullNotes.map(n => `<td>${n}</td>`).join('') + `<td><strong>${total}</strong></td>`;
+
+            return `
+                <div class="difficulty-section ${difficultyClass}">
+                    <div class="difficulty-info">
+                        <p><strong>难度:</strong> ${difficultyName} ${lvl} (${song.type})</p>
+                        <p><strong>定数:</strong> ${Number(song.ds[i]).toFixed(1)}</p>
+                        <p><strong>谱师:</strong> ${chart?.charter || '未知'}</p>
+                    </div>
+                    <table>
+                        <thead><tr>${headers}</tr></thead>
+                        <tbody><tr>${values}</tr></tbody>
+                    </table>
+                </div>
+            `;
+        })
+        .reverse() // 倒序显示
+        .join('');
+
+    content += difficulties + '</div>';
+    songDetails.innerHTML = content;
+    }
+
+    function showSearchResults() {
+      document.getElementById('searchResults').style.display = 'block';
+      document.getElementById('songDetails').style.display = 'none';
+    }
+  </script>
+  <footer style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+         <img src="img/UI_CMN_TrackStart_MugenMap.png" class="footer-img">
+     </footer>
+</body>
+</html>
